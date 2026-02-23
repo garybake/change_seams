@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Change Seams</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <div id="app">
+    <header id="header">
+      <h1>Change Seams</h1>
+      <span class="pill" onclick="window.open('/docs','_blank')">API docs</span>
+      <span class="pill" onclick="window.open('/api/prompts','_blank')">Prompts</span>
+      <div class="spacer"></div>
+      <span id="config-summary">loading config…</span>
+    </header>
+
+    <section id="chat-panel">
+      <div id="messages">
+        <div class="msg agent">
+          Hello! I'm an agent with tools. Ask me anything — try asking about the weather,
+          searching the web, or just chatting. Watch the Trace panel on the right to see
+          what's happening under the hood.
+        </div>
+      </div>
+      <div id="input-area">
+        <textarea
+          id="msg-input"
+          placeholder="Message… (Enter to send, Shift+Enter for newline)"
+          rows="1"
+        ></textarea>
+        <button id="send-btn">Send</button>
+      </div>
+    </section>
+
+    <section id="trace-panel">
+      <div id="trace-header">
+        Trace
+        <span id="trace-id-display" class="trace-id-display"></span>
+      </div>
+      <div id="trace-content">
+        <div class="trace-placeholder">Send a message to see trace spans.</div>
+      </div>
+      <div id="token-summary" style="display:none"></div>
+    </section>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+</html>
