@@ -25,6 +25,7 @@ def get_llm() -> BaseChatModel:
         return ChatAnthropic(
             model=settings.llm_model,
             temperature=settings.llm_temperature,
+            api_key=settings.anthropic_api_key or None,
         )
     else:
         raise ValueError(
