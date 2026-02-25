@@ -1,6 +1,8 @@
-# change_seams
+# Change Seams
 
 A FastAPI reference app demonstrating how to build an LLM application where the provider, prompts, tools, config, and observability are each a **change seam** — a narrow interface you can swap without touching anything else.
+
+See blog post [https://garybake.com/seams1.html](https://garybake.com/seams1.html)
 
 ```
 swap provider  →  change LLM_PROVIDER=anthropic in .env, restart
