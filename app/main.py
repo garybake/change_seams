@@ -6,6 +6,7 @@ from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 
 from app.api.chat import router as chat_router
+from app.api.tools import router as tools_router
 from app.observability.tracing import setup_tracing
 from app.prompts.router import router as prompts_router
 
@@ -28,6 +29,7 @@ app = FastAPI(
 # API routes
 app.include_router(chat_router)
 app.include_router(prompts_router)
+app.include_router(tools_router)
 
 
 @app.get("/health", tags=["health"])

@@ -35,5 +35,11 @@ class Settings(BaseSettings):
     def enabled_tools(self) -> list[str]:
         return [t.strip() for t in self.enabled_tools_csv.split(",") if t.strip()]
 
+    @property
+    def allowed_permissions(self) -> set[str]:
+        if self.policy_mode == "restricted":
+            return set()
+        return {"external_api", "read_web"}
+
 
 settings = Settings()

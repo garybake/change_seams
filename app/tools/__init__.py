@@ -11,8 +11,17 @@ def register(tool: ChangeSeamsTool) -> None:
     TOOL_REGISTRY[tool.name] = tool
 
 
-def get_enabled_tools(enabled_names: list[str]) -> list[ChangeSeamsTool]:
-    return [TOOL_REGISTRY[n] for n in enabled_names if n in TOOL_REGISTRY]
+def get_enabled_tools(
+    enabled_names: list[str],
+    allowed_permissions: set[str] | None = None,
+) -> list[ChangeSeamsTool]:
+    tools = [TOOL_REGISTRY[n] for n in enabled_names if n in TOOL_REGISTRY]
+    if allowed_permissions is not None:
+        tools = [
+            t for t in tools
+            if set(t.contract.required_permissions).issubset(allowed_permissions)
+        ]
+    return tools
 
 
 # Import all tool modules to trigger registration
