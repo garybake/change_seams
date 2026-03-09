@@ -55,8 +55,8 @@ async def run_agent(
     # ── Seam 1: Get LLM from provider factory ─────────────────────────────
     llm = get_llm()
 
-    # ── Seam 3: Get enabled tools ─────────────────────────────────────────
-    tools = get_enabled_tools(settings.enabled_tools)
+    # ── Seam 3: Get enabled tools, filtered by policy permissions ─────────
+    tools = get_enabled_tools(settings.enabled_tools, settings.allowed_permissions)
 
     # ── Seam 5: Create per-request callback handler ───────────────────────
     otel_handler = OtelCallbackHandler(tracer=tracer, trace_id=trace_id)

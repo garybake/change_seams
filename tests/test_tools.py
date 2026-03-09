@@ -125,3 +125,46 @@ def test_get_enabled_tools_skips_unknown():
 
     tools = get_enabled_tools(["echo", "nonexistent"])
     assert len(tools) == 1
+
+
+def test_get_enabled_tools_filters_by_permission():
+    from app.tools import get_enabled_tools
+
+    # empty allowed_permissions: only echo (no required permissions) survives
+    tools = get_enabled_tools(["echo", "weather", "search"], allowed_permissions=set())
+    assert len(tools) == 1
+    assert tools[0].name == "echo"
+
+
+def test_get_enabled_tools_default_allows_all():
+    from app.tools import get_enabled_tools
+
+    tools = get_enabled_tools(
+        ["echo", "weather", "search"],
+        allowed_permissions={"external_api", "read_web"},
+    )
+    assert len(tools) == 3
+
+
+@pytest.mark.anyio
+async def test_tools_endpoint_lists_all_registered(client):
+    response = await client.get("/api/tools")
+    assert response.status_code == 200
+    data = response.json()
+    names = {t["name"] for t in data}
+    assert names == {"echo", "weather", "search"}
+    for tool in data:
+        assert "name" in tool
+        assert "description" in tool
+        assert "args_schema" in tool
+        assert "required_permissions" in tool
+
+
+@pytest.mark.anyio
+async def test_tools_endpoint_contract_shape(client):
+    response = await client.get("/api/tools")
+    data = response.json()
+    for tool in data:
+        schema = tool["args_schema"]
+        assert schema["type"] == "object"
+        assert "properties" in schema
