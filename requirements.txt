@@ -29,6 +29,7 @@ pydantic-settings>=2.5
 
 # Observability
 opentelemetry-sdk>=1.25
+prometheus-client>=0.20
 
 # Testing
 pytest>=8.0
