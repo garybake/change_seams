@@ -2,8 +2,9 @@
 from contextlib import asynccontextmanager
 from pathlib import Path
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Response
 from fastapi.staticfiles import StaticFiles
+from prometheus_client import CONTENT_TYPE_LATEST, generate_latest
 
 from app.api.chat import router as chat_router
 from app.api.tools import router as tools_router
@@ -30,6 +31,11 @@ app = FastAPI(
 app.include_router(chat_router)
 app.include_router(prompts_router)
 app.include_router(tools_router)
+
+# Prometheus metrics endpoint (Seam 5 — swap exporter in tracing.py to change tracing backend)
+@app.get("/metrics", include_in_schema=True, tags=["observability"])
+def metrics() -> Response:
+    return Response(content=generate_latest(), media_type=CONTENT_TYPE_LATEST)
 
 
 @app.get("/health", tags=["health"])

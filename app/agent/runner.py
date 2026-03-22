@@ -20,6 +20,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.config import settings
 from app.models.observation import ObservationLog
+from app.observability.metrics import record_agent_metrics
 from app.observability.tracing import OtelCallbackHandler
 from app.prompts.registry import fetch_active_prompt
 from app.providers.llm import get_llm
@@ -115,6 +116,15 @@ async def run_agent(
         },
     }
     all_spans = [root_span_data] + otel_handler.spans
+
+    # ── Seam 5: Record Prometheus metrics ─────────────────────────────────
+    record_agent_metrics(
+        provider=settings.llm_provider,
+        model=settings.llm_model,
+        latency_seconds=latency_ms / 1000,
+        token_usage=otel_handler.token_usage,
+        tool_calls=otel_handler.tool_calls,
+    )
 
     # ── Seam 5: Persist observation log ───────────────────────────────────
     log = ObservationLog(
